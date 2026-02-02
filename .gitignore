@@ -1,2 +1,6 @@
 .env
 /node_modules/
+EC2Key.pem
+deploy.sh
+conn.sh
+unpack.sh

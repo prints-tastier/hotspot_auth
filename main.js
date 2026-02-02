@@ -30,5 +30,5 @@ app.use(async (ctx, next) => {
 
 app.use(authRouter.routes())
 
-app.listen(3001)
+app.listen(3000)
 
