@@ -105,13 +105,15 @@ authRouter.post("/login", async ctx => {
     }
 
     if (!user) {
-        ctx.throw(404, "No user with that username or email.")
+        //ctx.throw(404, "No user with that username or email.")
+        // TODO changed to 401 UNAUTHORIZED to enumerating emails
+        ctx.throw(401, "Invalid username or email, or password");
     }
 
     let isPasswordValid = await verify_password(user.password, password)
 
     if (!isPasswordValid) {
-        ctx.throw(401, "Invalid password.")
+        ctx.throw(401, "Invalid username or email, or password.")
     }
 
     ctx.state.response = {
