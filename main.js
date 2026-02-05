@@ -14,23 +14,18 @@ app.use(bodyParser())
 
 // logger
 app.use(async (ctx, next) => {
-    let log = `
-    [${ctx.method} ${ctx._matchedRouteName}]
-    `
-
+    // TODO impl
 
     await next()
 })
 
 // authorisation
 app.use(async (ctx, next) => {
-    console.log("headers", ctx.request.headers);
+    // TODO no auth needed
     await next();
 })
 
 app.use(authRouter.routes())
 
 app.listen(3000)
-
-// testing mirror
 

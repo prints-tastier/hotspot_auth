@@ -31,6 +31,7 @@ authRouter.use(async (ctx, next) => {
         await ctx.session.commitTransaction()
 
         ctx.status = ctx.state.response.status
+        ctx.message = ctx.state.message
         ctx.body = ctx.state.response.body
 
         console.log("[USE] ErrorHandler - endpoint returned with no error")
@@ -196,6 +197,8 @@ authRouter.post("/signup", async ctx => {
 
 // change password
 authRouter.post("/changePassword", async ctx => {
+    ctx.throw(501) // TODO move this to data service, use POST /passwordReset instead
+
     const {username, password, newPassword} = ctx.request.body;
 
     // TODO impl auto logout on password change
@@ -246,17 +249,32 @@ authRouter.post("/logout", async ctx => {
     }
 })
 
+authRouter.post("/passwordReset", async ctx => {
+    const {email} = ctx.request.body;
+
+    let count = await User.countDocuments({email})
+    let exists = count > 0
+
+    if (exists) {
+        // TODO send email
+    }
+
+    // always return ACCEPTED
+    ctx.status.response = {
+        status: 202,
+        message: "A password reset code was sent to you if an account with this email exists."
+    }
+})
+
 authRouter.post("/token", async ctx => {
-    const {username, refreshToken} = ctx.request.body;
+    const {userId, refreshToken} = ctx.request.body;
 
     let refreshTokenHash = sha256(refreshToken)
 
-    let user = await User.findOne({username}, UserAuthProjection)
+    let user = await User.findOne({id: userId}, UserAuthProjection)
     if (!user) {
         ctx.throw(404, "No user with that username.")
     }
-
-    let userId = user.id
 
     let session = Session.findOne({userId, token: refreshTokenHash})
     if (!session) {
