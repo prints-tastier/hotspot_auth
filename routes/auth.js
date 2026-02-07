@@ -156,7 +156,6 @@ authRouter.post("/signup", async ctx => {
     let dateJoined = new Date().toISOString()
     user.dateJoined = dateJoined
 
-    // TODO upload picture
     user.pictureUrl = null
 
     try {
