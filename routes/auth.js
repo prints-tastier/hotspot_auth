@@ -53,7 +53,7 @@ authRouter.use(async (ctx, next) => {
 
     console.log(`[USE] TokenGenerator - beginning auth token generation - data=${ctx.request.body}`)
 
-    let userId = ctx.state.response.body.id
+    let userId = ctx.state.response.body.userId
 
     if (!userId) {
         // this shouldnt happen since POST /signup should throw error but just in case
