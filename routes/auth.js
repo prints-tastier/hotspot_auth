@@ -64,7 +64,7 @@ authRouter.use(async (ctx, next) => {
 
     // generate access and refresh tokens
     if (ctx.state.response.body.grantAccessToken) {
-        let accessToken = jwt.sign({id: userId,}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_TTL})
+        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_TTL})
         ctx.state.response.body["access"] = accessToken
     }
     if (ctx.state.response.body.grantAccessToken) {
