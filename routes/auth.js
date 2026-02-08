@@ -131,10 +131,11 @@ authRouter.post("/login", async ctx => {
 
 // signup
 authRouter.post("/signup", async ctx => {
-    console.log("post -> creating user")
-    console.log(ctx.request.body)
+    console.log("[POST] signup")
 
     const userBody = ctx.request.body
+
+    Debug(ctx, `userBody=${JSON.stringify(userBody, null, 2)}}`)
 
     let user = new User(userBody)
 
@@ -143,7 +144,7 @@ authRouter.post("/signup", async ctx => {
     let isValid = !error
 
     if (!isValid) {
-        console.log(error)
+        Error(ctx, error)
         ctx.throw(400, "Bad body")
     }
 
@@ -159,12 +160,13 @@ authRouter.post("/signup", async ctx => {
     user.pictureUrl = null
 
     try {
-        console.log("post -> saving user")
+        Debug(ctx, "Saving User object...")
         console.log(user)
         await user.save({session: ctx.session})
+        Debug(ctx, "User object saved...")
     } catch (err) {
         // mongo error code
-        console.log(err)
+        Error(ctx, err)
         let code = err.code;
 
         switch (code) {
