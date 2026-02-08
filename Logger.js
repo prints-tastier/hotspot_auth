@@ -1,3 +1,10 @@
+export {
+    Debug,
+    Error,
+    Info,
+    Log
+}
+
 function Debug(ctx, ...messages) {
     console.log(`debug:[${ctx.method.toUpperCase()}] ${ctx.route} ${messages}`)
 }
