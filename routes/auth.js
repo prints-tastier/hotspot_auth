@@ -76,7 +76,7 @@ authRouter.use(async (ctx, next) => {
 
         console.log(`ttl ${ttl} s`)
 
-        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: ttl})
+        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: "1d"})
         ctx.state.response.body["access"] = {
             token: accessToken,
             expiresAt: expiresAt,
