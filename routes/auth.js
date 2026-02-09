@@ -9,6 +9,7 @@ import {sha256} from "../utils.js";
 import {validatePassword} from "../validation.js";
 import mongoose from "mongoose";
 import {Debug, Error} from "../Logger.js";
+import ms from "ms"
 
 dotenv.config();
 
@@ -70,13 +71,16 @@ authRouter.use(async (ctx, next) => {
 
     // generate access and refresh tokens
     if (ctx.state.response.body.grantAccessToken) {
-        let ttl = parseInt(process.env.JWT_TTL)
+        let ttl = process.env.JWT_TTL
+        let ttlMs = ms(ttl)
+
         let expiresAt = new Date()
-        expiresAt.setSeconds(expiresAt.getSeconds() + ttl)
+        expiresAt.setMilliseconds(expiresAt.getMilliseconds() + ttlMs)
 
-        console.log(`ttl ${ttl} s`)
+        console.log(typeof ttl)
+        console.log(`ttl ${ttl} ${ttlMs} s`)
 
-        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: "1d"})
+        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: ttl})
         ctx.state.response.body["access"] = {
             token: accessToken,
             expiresAt: expiresAt,
