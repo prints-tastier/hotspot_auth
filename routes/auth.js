@@ -70,10 +70,19 @@ authRouter.use(async (ctx, next) => {
 
     // generate access and refresh tokens
     if (ctx.state.response.body.grantAccessToken) {
-        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_TTL})
-        ctx.state.response.body["access"] = accessToken
+        let ttl = parseInt(process.env.JWT_TTL)
+        let expiresAt = new Date()
+        expiresAt.setSeconds(expiresAt.getSeconds() + ttl)
+
+        console.log(`ttl ${ttl} s`)
+
+        let accessToken = jwt.sign({userId: userId,}, process.env.JWT_SECRET, {expiresIn: ttl})
+        ctx.state.response.body["access"] = {
+            token: accessToken,
+            expiresAt: expiresAt,
+        }
     }
-    if (ctx.state.response.body.grantAccessToken) {
+    if (ctx.state.response.body.grantRefreshToken) {
         let refreshToken = Buffer.from(randomBytes(256)).toString("base64")
         let refreshTokenHash = sha256(refreshToken)
 
