@@ -43,6 +43,12 @@ authRouter.use(async (ctx, next) => {
         ctx.body = undefined
         ctx.status = err.statusCode || 500;
         ctx.message = err.message;
+        ctx.body = {
+            error: {
+                status: err.status,
+                message: err.message,
+            }
+        }
         console.log(`exiting with code - ${ctx.status}`)
     }
 })
