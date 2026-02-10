@@ -292,11 +292,13 @@ authRouter.post("/passwordReset", async ctx => {
 authRouter.post("/token", async ctx => {
     const {userId, refreshToken} = ctx.request.body;
 
+    console.log("")
+
     let refreshTokenHash = sha256(refreshToken)
 
     let user = await User.findOne({id: userId}, UserAuthProjection)
     if (!user) {
-        ctx.throw(404, "No user with that username.")
+        ctx.throw(404, "User not found.")
     }
 
     let session = Session.findOne({userId, token: refreshTokenHash})
